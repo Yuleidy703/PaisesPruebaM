@@ -8,27 +8,69 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
+import com.mindorks.placeholderview.PlaceHolderView;
 
 import java.util.ArrayList;
 
-public class AdaptadorPaises extends ArrayAdapter<Paises> {
-    public AdaptadorPaises(Context context, ArrayList<Paises> datos) {
-        super(context,  R.layout.ly_paises, datos);
-    }
-    public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View item = inflater.inflate(R.layout.ly_paises, null);
+public class AdaptadorPaises extends PlaceHolderView.Adapter<AdaptadorPaises.ViewHolderPaises> implements View.OnClickListener {
 
-        TextView lbltitulo = (TextView)item.findViewById(R.id.txtNombre);
-        lbltitulo.setText(getItem(position).getNombre());
+    Context context;
+    ArrayList<Paises> listaPaises;
+    private View.OnClickListener listener;
 
-        ImageView imageView =(ImageView)item.findViewById(R.id.imgPais);
-        Glide.with(this.getContext())
-                .load(getItem(position).getImagen())
-                .into(imageView);
-
-        return item;
+    public AdaptadorPaises(ArrayList<Paises> listaPaises) {
+        this.listaPaises = listaPaises;
     }
 
+    @Override
+    public ViewHolderPaises onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ly_paises,null,false);
+        view.setOnClickListener(this);
+        return new ViewHolderPaises(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolderPaises holder, int position) {
+        holder.nombrePais.setText(listaPaises.get(position).getNombre());
+
+        Glide.with(this.context)
+                .load(listaPaises.get(position).getUrl())
+                .into(holder.imagenPais);
+    }
+
+    public AdaptadorPaises(ArrayList<Paises> listaDatos, Context contexto){
+        this.context = contexto;
+        this.listaPaises = listaDatos;
+    }
+
+    @Override
+    public int getItemCount() {
+        return listaPaises.size();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(listener!=null){
+            listener.onClick(v);
+        }
+    }
+
+    public void setOnClickListener(View.OnClickListener listener){
+        this.listener=listener;
+    }
+
+    public class ViewHolderPaises extends RecyclerView.ViewHolder {
+        TextView nombrePais;
+        ImageView imagenPais;
+
+        public ViewHolderPaises(final View itemView) {
+            super(itemView);
+            nombrePais=(TextView)itemView.findViewById(R.id.lblNombrePais);
+            imagenPais=(ImageView)itemView.findViewById(R.id.imgBanderaPais);
+        }
+    }
 }
+

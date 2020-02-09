@@ -7,39 +7,38 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class Paises {
-    private String Nombre;
-    private String Imagen;
+    private String nombre;
+    private String alfacode;
+    private String url;
+
     public Paises(JSONObject a) throws JSONException {
-        Nombre= a.getString("Name");
-        Imagen =  "http://www.geognos.com/api/en/countries/flag/" + a.getString("iso2")+".png" ;
-
-    }
-    public Paises(){
-
-    }
-
-
-    public static ArrayList<Paises> JsonObjectsBuild(JSONArray datos) throws JSONException {
-        ArrayList<Paises> articulos = new ArrayList<>();
-        for (int i = 0; i < datos.length(); i++) {
-            articulos.add(new Paises(datos.getJSONObject(i)));
-        }
-        return articulos;
+        nombre =  a.getString("name").toString();
+        alfacode = a.getString("alpha2_code").toString();
+        url = "http://www.geognos.com/api/en/countries/flag/"+alfacode+".png";
     }
 
     public String getNombre() {
-        return Nombre;
+        return nombre;
+    }
+
+    public String getAlfacode() {
+        return alfacode;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public void setNombre(String nombre) {
-        Nombre = nombre;
+        this.nombre = nombre;
     }
 
-    public String getImagen() {
-        return Imagen;
+    public void setAlfacode(String alfacode) {
+        this.alfacode = alfacode;
     }
 
-    public void setImagen(String imagen) {
-        Imagen = "http://www.geognos.com/api/en/countries/flag/"+imagen+".png";
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
+
